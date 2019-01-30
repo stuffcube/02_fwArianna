@@ -5,6 +5,8 @@
 	23gen19 3.05.8
 	su blocco per ostacolo azzerare distanza residua #9, 
 	soluzione: distanza = odometro 
+	lettura  'm': ritorna "mis:vl53dist; lidarDistance
+
 
 	20gen19 3.05.7
 		la registrazione, una volta attivata, parte quando R diventa diverso da zero.
@@ -1361,6 +1363,13 @@ static int  counter = 0;
 		String(vl53dist)		+";"+\
 		String(inputString.substring(2)) ;
 
+		
+	case 'm':
+		risposta = "mis:"			+\
+		String(vl53dist)	    +";"+\
+		String(lidarDistance);
+		break;
+		
 */
 void richieste(void)
 {
@@ -1407,7 +1416,7 @@ static float x, y;
               risposta = "h-V FW: " + String(V_FW_ATMEGA);
             break;
 
-			
+			// comandi registratore (digital scope)
 			// ixyyyy
 			// x: comando
 			// y: argomento comando
@@ -1415,6 +1424,12 @@ static float x, y;
 				scope( char(inputString[2]), inputString.substring(3).toInt(),0,0,0,0);
 				
             break;
+
+			case 'm':
+				risposta = "m:"			+\
+				String(vl53dist)	    +";"+\
+				String(lidarDistance);
+				break;
 
 			case 'p':
 				if (monitorDati) return;
@@ -1532,8 +1547,7 @@ static float x, y;
 		E1 LEGGI i parametri in E2prom,
 		E2 rispristina in valori di DEFAULT,
 		E3 mostra i parametri CORRENTI,
-		E4 carica i valori di DEFAULT per il modello ARI02,
-		E5 carica i valori di DEFAULT per il modello ARI03,
+
 
     Fnxxx: imposta dei parametri del robot. "n" indica quale parametro, "xxx" è il valore.
 
@@ -1581,8 +1595,6 @@ static float x, y;
         K3 kd_guida il guadagno derivativo    kd usato nel modo Run 1 e 3 (sensore di distanza laterale)
 
     H0:   Homing, assegna lo posizione corrente (x, y, teta) = (0, 0, 0)
-
-    Ixxx;   Integral part. assegna il guadagno della parte integrale kiTeta usato nel modo Run 4.
 
     Lx:   Led. puntatore a Led acceso, x=1, o spento x=0.
 
@@ -1694,14 +1706,15 @@ static float x, y;
     */
 
     switch (char(inputString[1])) {
-      case 'A':
+
+	case 'B':
+    case 'I':
+			risposta = "libero";
+        break;
+		
+		case 'A':
 			tetaRef  = x*3.14/180.0;
 			risposta = "A: " + String( tetaRef, 3);
-        break;
-
-      case 'B':
-			//sensore_ost = x;
-			risposta = "B: libero";// + String(sensore_ost);
         break;
 
       case 'C':
@@ -1821,11 +1834,6 @@ static float x, y;
         xpos = ypos = teta = 0.0;
         risposta = "H: ";
       break;
-
-      case 'I':
-          kiTeta = x;
-          risposta = "I: " + String(kiTeta, 3);
-        break;
 
       case 'L':
           Serial.println(x);

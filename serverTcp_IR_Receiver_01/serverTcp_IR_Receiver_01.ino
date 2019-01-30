@@ -3,21 +3,19 @@
  * 	stuffcube.wordpress.com
 
 	20gen19	1.00.03
-		aggiunto identificato del Robot a UDP 
-	
+		aggiunto identificato del Robot a UDP
+
 	28dic18 1.00.02
 		rimossa richiesta automatica del comando 'p'
 		rimossa impostazione tempo ">p" in b_getCmd.ino
-		
-		
+
+
 	16dic18 1.00.01
 		aggiunta versione
 		si legge con >v
-		
- 
+
 	04mag18
 		update con udp discovery
-
 		
 	13ago18
 		aggiunta interfaccia per configurazione WiFi
@@ -35,26 +33,27 @@
 		aggiunte librerie, vedi esempio ESP8266_IRreceive demo
 		#include <IRremoteESP8266.h>
 		#include <IRrecv.h>
-		#include <IRutils.h> 
+		#include <IRutils.h>
 		aggiunto cast a long su Serial.println((long)results.value, HEX);
 		variata mappatura pin
-		merge conserertcp_arianna_2.ino    
+		merge conserertcp_arianna_2.ino
 
 	06apr18
-		rimosso lettura continua poichÃ¨ ogni tanto partiva da sola
+		rimosso lettura continua poichè ogni tanto partiva da sola
 		pezza
 
 
 	29dic17 aggiunta gestione barriera di arrivo
 		i codici letti possono essere diversi
-		la lettura viene fatta da fermo. QUindi la barriera Ã¨ occupata o no.
-		il codice ricevuto Ã¨ unico nella sessione
+		la lettura viene fatta da fermo. QUindi la barriera è occupata o no.
+		il codice ricevuto è unico nella sessione
 		ritorno il codice ricevuto e il numero di occorrenze
-	  
+
+
 	03dic17		IRrecvDemo_1.ino
 		il comando R1 effettua una lettura multipla dei tre sensori
 		e ritorna i risultati.
-		Ã¨ coordinato con IRsendDemo in docking folder
+		è coordinato con IRsendDemo in docking folder
 
 	23nov17 	IRrecv_00
 
@@ -65,7 +64,7 @@
  * Version 0.1 July, 2009
  * Copyright 2009 Ken Shirriff
  * http://arcfn.com
- * 	
+ *
 Starts listening for an IR code.
 int irrecv.decode(&results)
 
@@ -86,6 +85,7 @@ rawlen 			Number of records in rawbuf
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
+#include <EEPROM.h>
 
 //for LED status
 #include <Ticker.h>
@@ -184,6 +184,37 @@ void getFromArduino(void);
 /**
 	@brief gets called when WiFiManager enters configuration mode
 */
+// salvataggio  e lettura in EEPROM dei parametri aggiuntivi
+void writeString(char add,String data)
+{
+	int _size = data.length();
+	int i;
+	for(i=0; i<_size; i++){
+		EEPROM.write(add+i, data[i]);
+	}
+	EEPROM.write(add + _size,'\0');   //Add termination null character for String Data
+}
+
+
+String read_String(char add)
+{
+	int i;
+	char data[30]; //Max 100 Bytes
+	int len=0;
+	unsigned char k;
+	k=EEPROM.read(add);
+	while(k != '\0' && len<500)   //Read until null character
+	{
+		k=EEPROM.read(add+len);
+		data[len]=k;
+		len++;
+	}
+	data[len]='\0';
+	return String(data);
+}
+
+
+
 void configModeCallback (WiFiManager *myWiFiManager) {
 	//Serial.println("Entered config mode");
 	//Serial.println(WiFi.softAPIP());
@@ -206,6 +237,7 @@ WiFiManagerParameter custom_porta("porta", "porta udp 8888", portAri,  4);
 void setup()
 {
 	Serial.begin(115200);
+	EEPROM.begin(512);
 
 	pinMode(LED  ,  OUTPUT); 
 	digitalWrite(LED, HIGH);
@@ -215,9 +247,9 @@ void setup()
 
   
   
-	Serial.println();  
-	Serial.print("serverTcp_IR_Recerver_01.ino. V_FW_ESP8266: ");  
-	Serial.println(V_FW_ESP8266);  
+	Serial.println();
+	Serial.print("serverTcp_IR_Recerver_01.ino. V_FW_ESP8266: ");
+	Serial.println(V_FW_ESP8266);
 
 	irRecv.enableIRIn(); // Start the receiver
 
@@ -230,7 +262,8 @@ void setup()
 	WiFiManager wifiManager;
 	wifiManager.addParameter( &custom_nome );
 	wifiManager.addParameter( &custom_porta);
-	
+
+
 	//reset settings - for testing
 	//wifiManager.resetSettings();
 
@@ -241,14 +274,27 @@ void setup()
 	//if it does not connect it starts an access point with the specified name
 	//here  "AutoConnectAP"
 	//and goes into a blocking loop awaiting configuration
-	
+
+
 	if (!wifiManager.autoConnect()) {
 		//Serial.println("failed to connect and hit timeout");
 		//reset and try again, or maybe put it to deep sleep
+		writeString( 0,"                         ");
+		writeString(30,"      ");
+		EEPROM.commit();	//  whenever you wish to save changes to flash
 		ESP.reset();
 		delay(1000);
-	}	
-	
+	}
+
+	String ts = String(custom_porta.getValue());
+	if (ts.toInt()>1)
+	{
+		writeString( 0,String(custom_nome.getValue()));
+		writeString(30,String(custom_porta.getValue()));
+		EEPROM.commit();
+	}
+
+
 
 	debug 					= 0;
 	uint8_t i 				= 0;
@@ -267,10 +313,12 @@ void setup()
 	ticker.detach();
   //keep LED on
 	digitalWrite(LED, LOW);
-	
+
+
 	if (verbose){
 		Serial.println("end init");
 	}
+
 }
 
 			
@@ -298,13 +346,14 @@ void loop() {
 		broadcastIp[3] = 255;
 		
 		if (verbose)	Serial.println(WiFi.localIP());
-		
-		String tempprt = String(custom_porta.getValue());
+
+
+		String tempprt =read_String(30);
 		udpport = tempprt.toInt();
-		
+
 		UDP.beginPacket ( broadcastIp, udpport );
-		UDP.print(String( custom_nome.getValue()));
-		//UDP.print("arianna:");
+		UDP.print(read_String(0));
+
 		UDP.endPacket();
 		serverClient.stop();
 	}
