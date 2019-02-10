@@ -4,7 +4,10 @@ serveTcp_IR_receiver_01 contiene il FW su [Wemos D1](https://wiki.wemos.cc/produ
 
 
 
+| nume file                           | contenuto                                                    |
+| ----------------------------------- | ------------------------------------------------------------ |
+| 00_installArduinoARIandLibraries.md | istallazione ambiente ARduino e librerie. Compila e scarica il firmware. |
+| 01_Comandi_comeIniziare.md          | Configurare la meccanica e come muoverla da linea di comando. Gli esercizi di movimento. |
+| 02_funzioni.md                      | Come funziona Arianna percorrendo la sua genesi. L'iilustrazione del come e perchè le varie funzioni sono state introdotte. |
 
-
-nota: il folder ariPi_2DC_esp_08 era per compatibilità con versioni del sw cli(ent) precedenti. E' stato rimosso.
 

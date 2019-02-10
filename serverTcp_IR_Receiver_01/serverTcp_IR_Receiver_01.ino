@@ -3,7 +3,7 @@
  * 	stuffcube.wordpress.com
 
 	20gen19	1.00.03
-		aggiunto identificato del Robot a UDP
+		aggiunto identificato del Robot e UDP
 
 	28dic18 1.00.02
 		rimossa richiesta automatica del comando 'p'
