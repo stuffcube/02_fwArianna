@@ -48,7 +48,7 @@ int  i = 0;
 
       case 0: //
           if (comando == SCRIVI)        EEPROM.put(eeAddress, ED);
-          if (comando == LEGGI)       EEPROM.get(eeAddress, ED);
+          if (comando == LEGGI)       	EEPROM.get(eeAddress, ED);
           if (comando == DEFAULT)       ED = 1.0;
 
             eeAddress += sizeof(float); //Move address to the next byte after float 'f'.
@@ -56,23 +56,23 @@ int  i = 0;
 
       case 1: //
           if (comando == SCRIVI)        EEPROM.put(eeAddress, ED_BASE);
-          if (comando == LEGGI)       EEPROM.get(eeAddress, ED_BASE);
+          if (comando == LEGGI)       	EEPROM.get(eeAddress, ED_BASE);
           if (comando == DEFAULT)       ED_BASE = 1.0;
 
             eeAddress += sizeof(float);
         break;
 
       case 2: //
-          if (comando == SCRIVI)      EEPROM.put(eeAddress, BASELINE);
-          if (comando == LEGGI)     EEPROM.get(eeAddress, BASELINE);
-          if (comando == DEFAULT)     BASELINE = 220.0;
+          if (comando == SCRIVI)      	EEPROM.put(eeAddress, BASELINE);
+          if (comando == LEGGI)     	EEPROM.get(eeAddress, BASELINE);
+          if (comando == DEFAULT)     	BASELINE = 220.0;
 
             eeAddress += sizeof(float);
         break;
 
       case 3: //
           if (comando == SCRIVI)        EEPROM.put(eeAddress, GIRO_RUOTA);
-          if (comando == LEGGI)       EEPROM.get(eeAddress, GIRO_RUOTA);
+          if (comando == LEGGI)       	EEPROM.get(eeAddress, GIRO_RUOTA);
           if (comando == DEFAULT)       GIRO_RUOTA = 1.995;
 
             eeAddress += sizeof(float);
@@ -81,14 +81,14 @@ int  i = 0;
       case 4: //
           if (comando == SCRIVI)        EEPROM.put(eeAddress, kpTeta);
           if (comando == LEGGI)         EEPROM.get(eeAddress, kpTeta);
-          if (comando == DEFAULT)       kpTeta = 8.0;
+          if (comando == DEFAULT)       kpTeta = 2.0; //8.0;
 
             eeAddress += sizeof(float);
         break;
 
       case 5: //
           if (comando == SCRIVI)        EEPROM.put(eeAddress, ox);
-          if (comando == LEGGI)     EEPROM.get(eeAddress, ox);
+          if (comando == LEGGI)     	EEPROM.get(eeAddress, ox);
           if (comando == DEFAULT)       ox = 0.0;
 
             eeAddress += sizeof(float);
@@ -96,7 +96,7 @@ int  i = 0;
 
       case 6: //
           if (comando == SCRIVI)        EEPROM.put(eeAddress, oy);
-          if (comando == LEGGI)       EEPROM.get(eeAddress, oy);
+          if (comando == LEGGI)       	EEPROM.get(eeAddress, oy);
           if (comando == DEFAULT)       oy = 0.0;
 
             eeAddress += sizeof(float);
@@ -104,7 +104,7 @@ int  i = 0;
 
       case 7: //
           if (comando == SCRIVI)        EEPROM.put(eeAddress, ky);
-          if (comando == LEGGI)       EEPROM.get(eeAddress, ky);
+          if (comando == LEGGI)       	EEPROM.get(eeAddress, ky);
           if (comando == DEFAULT)       ky = 1.0;
 
             eeAddress += sizeof(float);
@@ -112,7 +112,7 @@ int  i = 0;
 
       case 8: //
           if (comando == SCRIVI)        EEPROM.put(eeAddress, kiTeta);
-          if (comando == LEGGI)       EEPROM.get(eeAddress, kiTeta);
+          if (comando == LEGGI)       	EEPROM.get(eeAddress, kiTeta);
           if (comando == DEFAULT)       kiTeta = 0.2;
 
             eeAddress += sizeof(float);
@@ -120,7 +120,7 @@ int  i = 0;
 
       case 9: //
           if (comando == SCRIVI)        EEPROM.put(eeAddress, kp_guida);
-          if (comando == LEGGI)       EEPROM.get(eeAddress, kp_guida);
+          if (comando == LEGGI)       	EEPROM.get(eeAddress, kp_guida);
           if (comando == DEFAULT)       kp_guida = 0.5;
 
             eeAddress += sizeof(float);
@@ -128,7 +128,7 @@ int  i = 0;
 
       case 10:  //
           if (comando == SCRIVI)        EEPROM.put(eeAddress, kd_guida);
-          if (comando == LEGGI)       EEPROM.get(eeAddress, kd_guida);
+          if (comando == LEGGI)       	EEPROM.get(eeAddress, kd_guida);
           if (comando == DEFAULT)       kd_guida = 40.0;
 
             eeAddress += sizeof(float);
@@ -136,7 +136,7 @@ int  i = 0;
 
       case 11:  //
           if (comando == SCRIVI)        EEPROM.put(eeAddress, divLidar);
-          if (comando == LEGGI)     EEPROM.get(eeAddress, divLidar);
+          if (comando == LEGGI)     	EEPROM.get(eeAddress, divLidar);
           if (comando == DEFAULT)       divLidar = 1;
 
             eeAddress += sizeof(int);
@@ -144,7 +144,7 @@ int  i = 0;
 
       case 12:  //
           if (comando == SCRIVI)        EEPROM.put(eeAddress, offsetPan);
-          if (comando == LEGGI)       EEPROM.get(eeAddress, offsetPan);
+          if (comando == LEGGI)       	EEPROM.get(eeAddress, offsetPan);
           if (comando == DEFAULT)       offsetPan = 0;
 
             eeAddress += sizeof(int);

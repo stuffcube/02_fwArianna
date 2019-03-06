@@ -9,7 +9,7 @@
   Il flag Vx_zero indica queando il motore è fermo. In questo caso si evitano i conteggi per evitarne di falsi.
   Se gli impulsi giugono troppo velocemente vengono considerati errori.
 
-  La routine incremmenta contatori di interi per essere veloce.
+  La routine incrementa contatori di interi per essere veloce.
 */
 void odometroDxMisuraHW(void){
 unsigned long pulseTime;

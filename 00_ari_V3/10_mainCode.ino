@@ -7,6 +7,9 @@
 	il file cfg.ino è per lasciarlo separato su git
 	se il lidar non è presente con la libreria attuale si blocca.
 	va modificata.
+	rotazione sul posto. motorSpeed =  abs(raggiorSterzo)*motorSpeedValue;//110.0; 
+	ridotto MIN_TIME_TRA_PULSE da 9 a 1. Nuovi opto encoder con nuove rotelle a fessura più stretta. Il tempo arrivava a 5 ms.
+	default kpTeta = 2.0; // era 8.0;
 
 	23gen19 3.05.8
 	su blocco per ostacolo azzerare distanza residua #9, 
@@ -278,6 +281,8 @@ static long exeTime, tInit;
 						}
 					}
 
+					//Serial.println(posRef);
+					
 					// regolatore PI
 
 					errore = posRef - tetaMisura;
@@ -307,7 +312,7 @@ static long exeTime, tInit;
 					if (raggiorSterzo < -2.0) raggiorSterzo = -2.0;   // ID_005
 					if (raggiorSterzo >  2.0) raggiorSterzo =  2.0;   // ID_005
 					
-	                motorSpeed =  abs(raggiorSterzo)*110.0; //MODERATA;
+	                motorSpeed =  abs(raggiorSterzo)*motorSpeedValue;//110.0; //MODERATA;
 					if (raggiorSterzo > 0) 	direzione = AVANTI;
 					else					direzione = INDIETRO;
 

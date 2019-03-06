@@ -52,11 +52,11 @@ Servo servoTilt;        // create servo object to control a servo
 //creo tfmini
 TFMini  tfmini;
 
-String  inputString       = "";
-String  inputStringTmp      = "";
-int     okcomm            = 0;
+String  inputString       	= "";
+String  inputStringTmp    	= "";
+int     okcomm            	= 0;
 static  String risposta;
-char    port            = 0;
+char    port            	= 0;
 
 //**********fine ID_002
 
@@ -122,7 +122,7 @@ int VA_zero       = 0;
 #define  TEST_CONTROLLO     3   ///< modalità di test per fasi di debug
 #define  TEST_GIRO_SENSOR   4   ///< modalità di test per fasi di debug
 
-long odometroCnt, odometroDxCnt, odometroSxCnt;     ///< contatori encoder
+long odometroCnt, odometroDxCnt, odometroSxCnt;
 
 char firstRun;
 
@@ -130,17 +130,17 @@ char firstRun;
 #define TEMPO_CONTROLLO   3   ///< tempo del controllo sterzo, posizione etc in 10ms
 
 
-float ED          = 1.0;      ///< definiscono la meccanica del robot. descrizione nella parte cinematica 
+float ED          	= 1.0;      ///< definiscono la meccanica del robot. descrizione nella parte cinematica 
 float ED_BASE       = 1.0;      ///< definiscono la meccanica del robot. descrizione nella parte cinematica  
 float BASELINE      = 130.0;    ///< larghezza carreggiata in [mm]. descrizione nella parte cinematica  
 float LAGHEZZA_A_MEZZI = 0.065; ///< larghezza meta' carreggiata in [m]. descrizione nella parte cinematica  
 
 float GIRO_RUOTA_SX = 1.0;      ///< [mm per impulso*0.5]  sviluppo ruota[mm]/(2*ppr) (pulses per revolution)]. descrizione nella parte cinematica  
 float GIRO_RUOTA_DX = 1.0;      ///< [mm per impulso*0.5]  sviluppo ruota[mm]/(2*ppr) (pulses per revolution)]. descrizione nella parte cinematica  
-float GIRO_RUOTA  = 1.0;      ///< (GIRO_RUOTA_SX + GIRO_RUOTA_DX)/2. descrizione nella parte cinematica  
+float GIRO_RUOTA  	= 1.0;      ///< (GIRO_RUOTA_SX + GIRO_RUOTA_DX)/2. descrizione nella parte cinematica  
 
-unsigned long MIN_TIME_TRA_PULSE = 9;     ///< tempo minimo tra impulsi encoder per evitare errate letture [ms]
-
+unsigned long MIN_TIME_TRA_PULSE = 1;     ///< tempo minimo tra impulsi encoder per evitare errate letture [ms]
+     ///< contatori encoder
 
 #define E_POSIZIONAMENTO    10    ///< [mm], distanza dall'obbiettivo dove il robot si arresta
 #define E_APPROCCIO       300   ///< [mm], distanza dall'obbiettivo dove il robot inizia a rallentare

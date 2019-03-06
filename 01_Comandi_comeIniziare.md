@@ -167,28 +167,37 @@ F5xx offest servo Pan [°]
 "Guide Mode". definisce il modo di guida nel run "R4". Il teta di feedback, tetaMisura, può provenire dall'odometria, dalla bussola, o altri mix possibili.
 Nel codice sotto teta è l'angolo ricavato dagli encoder. Il modo zero si affida alle misure fatte dagli encoder. Il modo 1 e 3 ricavano il teta direttamente dalla bussola. Nel modo 3 anche le posizioni x e y  sono calcolate dal teta della bussola.con il modo 2 è possibile imporre l'angolo corrente come angolo zero. Altrimenti la direzione è    assoluta come determinata dalla bussola.
 
-`​if (modoGuida == 0) tetaMisura = teta;`
-`	if (modoGuida == 1) tetaMisura = tetaCompass;                
+```
+if (modoGuida == 0) tetaMisura = teta;
+	if (modoGuida == 1) tetaMisura = tetaCompass;                
     if (modoGuida == 3) tetaMisura = tetaCompass;               
-​    if (modoGuida == 2) {                   `
-`​   	tetaCompass = 0;    // definisco la direzione corrente come zero.                   
-​        modoGuida   = 1;`
-`   }`
+    if (modoGuida == 2) {                   `
+   	tetaCompass = 0;    // definisco la direzione corrente come zero.                   
+        modoGuida   = 1;
+   }
 
-​ in updatePosition integro posizioni in funzione del modoGuida attivo
-`if (modoGuida == 3) {                   
+ in updatePosition integro posizioni in funzione del modoGuida attivo
+if (modoGuida == 3) {                   
 	xpos    +=  deltaC*cos(tetaCompass);                    
 	ypos    +=  deltaC*sin(tetaCompass);                    
-}`
-`else{                   
+}
+else{                   
 	xpos    +=  deltaC*cos(teta);                   
 	ypos    +=  deltaC*sin(teta);                   
-}` 
+} 
+
+```
+
+
+
 
 #### Knxx:   assegnazione dei guadagni dei regolatori
 K0 kpTeta   il guadagno proporzionale kp usato nel modo Run 4
+
 ​K1 kiTeta
+
 ​K2 kp_guida il guadagno proporzionale kp usato nel modo Run 1 e 3 (sensore di distanza laterale)
+
 ​K3 kd_guida il guadagno derivativo    kd usato nel modo Run 1 e 3 (sensore di distanza laterale)
 
 #### H0: Homing
@@ -200,33 +209,37 @@ Led. puntatore a Led acceso, x=1, o spento x=0.
 #### Mx: monitor dati
 Monitor. Attiva, 1, o disattiva, 0, l'invio continuo di misure da parte del robot. le msiure sono inviate nella routine "updatePosition" ogni 100 ms. La stringa ha l'header "mon:"
 
-`if (monitorDati && (counter >=4) ){`
-`​        counter = 0;`
-`​        risposta  = "mon;";`
-`​        risposta += (dDxCnt);`
-`​        risposta += (";");`
-`​        risposta += (dSxCnt);`
-`​        risposta += (";");`
-`​        risposta += (deltaC);`
-`​        risposta += (";");`
-`​        risposta += (teta);`
-`​        risposta += (";");`
-`​        risposta += (xpos);`
-`​        risposta += (";");`
-`​        risposta += (ypos);`
-`​        risposta += (";");`
-`​        risposta += (i_part);// raggiorSterzo`
-`​        risposta += (";");`
-`​        risposta += event.magnetic.x;`
-`​        risposta += ";";`
-`​        risposta += event.magnetic.y;`
-`​        risposta += ";";`
-`​        risposta += event.magnetic.z;`
-`​        risposta += ";";`
-`​        sendAnswer2(port);`
-`}`
+```
+if (monitorDati && (counter >=4) ){
+        counter = 0;
+        risposta  = "mon;";
+        risposta += (dDxCnt);
+        risposta += (";");
+        risposta += (dSxCnt);
+        risposta += (";");
+        risposta += (deltaC);
+        risposta += (";");
+        risposta += (teta);
+        risposta += (";");
+        risposta += (xpos);
+        risposta += (";");
+        risposta += (ypos);
+        risposta += (";");
+        risposta += (i_part);// raggiorSterzo
+        risposta += (";");
+        risposta += event.magnetic.x;
+        risposta += ";";
+        risposta += event.magnetic.y;
+        risposta += ";";
+        risposta += event.magnetic.z;
+        risposta += ";";
+        sendAnswer2(port);
+}
 
- 
+```
+
+
+
 
 #### Nnxxx:  assegna i coefficienti di correzione della bussola.
 
