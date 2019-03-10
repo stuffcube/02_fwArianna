@@ -1,6 +1,11 @@
-#define V_FW_ESP8266  "!1.00.04?"
+#define V_FW_ESP8266  "!1.00.05?"
 /*@serverTcp_IR_Receiver_o1.ino
  *  stuffcube.wordpress.com
+
+  10mar19 1.00.05
+  reset configurazione WiFi con pin D3
+  corretta len buffer in read_String
+  aggiunti messagi di diagnotica su seriale
 
   16feb19 1.00.04
     prove per trovare Ari in rete
@@ -137,7 +142,8 @@ char* portAri;
 #define TAG_NOT_RECIVED 9999
 
 #define LED     LED_BUILTIN //13
-
+#define RESET_WIFI  0       // GPIO0 = D3 su scritta WEMOS
+#define NAME_LENGTH 30      
 
 WiFiServer server(81);
 WiFiClient serverClient;
@@ -183,7 +189,7 @@ int leggiSingle;
 
 // prototype declaration
 void mostraHelp (void);
-void getCmd   (void);
+void getCmd     (void);
 void readSensor (char sensore);
 void scanSensor (void);
 void getCmdFromClient(void);
@@ -208,11 +214,11 @@ void writeString(char add,String data)
 String read_String(char add)
 {
   int i;
-  char data[30]; //Max 100 Bytes
+  char data[NAME_LENGTH]; //Max 100 Bytes
   int len=0;
   unsigned char k;
   k=EEPROM.read(add);
-  while(k != '\0' && len<500)   //Read until null character
+  while(k != '\0' && len<NAME_LENGTH)   //Read until null character
   {
     k=EEPROM.read(add+len);
     data[len]=k;
@@ -248,8 +254,13 @@ void setup()
   Serial.begin(115200);
   EEPROM.begin(512);
 
-  pinMode(LED  ,  OUTPUT); 
+  pinMode(LED,         OUTPUT); 
+  pinMode(RESET_WIFI,  INPUT ); 
+
   digitalWrite(LED, HIGH);
+
+  int state = digitalRead(BUILTIN_LED);  // get the current state of GPIO1 pin
+
 
   // start ticker with 0.5 because we start in AP mode and try to connect
   ticker.attach(0.6, tick);
@@ -286,10 +297,10 @@ void setup()
 
 
   if (!wifiManager.autoConnect()) {
-    //Serial.println("failed to connect and hit timeout");
+    Serial.println("failed to connect and hit timeout");
     //reset and try again, or maybe put it to deep sleep
-    writeString( 0,"                         ");
-    writeString(30,"      ");
+    writeString(          0,"                         ");
+    writeString(NAME_LENGTH,"      ");
     EEPROM.commit();  //  whenever you wish to save changes to flash
     ESP.reset();
     delay(1000);
@@ -298,8 +309,8 @@ void setup()
   String ts = String(custom_porta.getValue());
   if (ts.toInt()>1)
   {
-    writeString( 0,String(custom_nome.getValue()));
-    writeString(30,String(custom_porta.getValue()));
+    writeString(          0,String(custom_nome.getValue()));
+    writeString(NAME_LENGTH,String(custom_porta.getValue()));
     EEPROM.commit();
   }
 
@@ -347,6 +358,19 @@ void setup()
 
 
 void loop() {
+
+
+  // reset wifi durante funzionamento
+  if (!digitalRead(RESET_WIFI)){
+      Serial.println("resetting WiFi configuration, Please restart all");
+      //reset settings - for testing
+      //WiFiManager
+      //Local initialization. Once its business is done, there is no need to keep it around
+      WiFiManager wifiManager;
+      wifiManager.resetSettings();
+      while(1);
+  }
+
 
   //uint8_t i;
   //check if there are any new clients
